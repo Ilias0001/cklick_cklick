@@ -24,6 +24,9 @@ def hilight_btn(btn,color,duration_ms = 500):
     btn.setStyleSheet(f'background-color:{color};')
     QTimer.singleShot(duration_ms , lambda: btn.setStyleSheet(original_stule))
 
+def check():
+    pass
+
 def play():
 #    btn_play.hide()
     for btn_s in range(levl_btn):
