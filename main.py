@@ -28,13 +28,16 @@ def check():
     pass
 
 def play():
-#    btn_play.hide()
-    for btn_s in range(levl_btn):
-        num = randint(0,5)
-        hilight_btn(btns[num],'red',1000)
-        btns_for_task.append(num)
-#        sleep(1)
-        print(btns_for_task)
+    btn_play.hide()
+    def show_next_btn(index):
+        if index < levl_btn:
+            num = randint(0,5)
+            hilight_btn(btns[num],'red',1000)
+            btns_for_task.append(num)
+            print(btns_for_task)
+            QTimer.singleShot(1200,lambda: show_next_btn(index+1))
+    show_next_btn(0)
+
 
 levl_btn = 3
 
