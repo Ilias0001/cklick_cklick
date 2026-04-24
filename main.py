@@ -24,52 +24,92 @@ def hilight_btn(btn,color,duration_ms = 500):
     btn.setStyleSheet(f'background-color:{color};')
     QTimer.singleShot(duration_ms , lambda: btn.setStyleSheet(original_stule))
 
-def check():
-    pass
+def check(users):
+    print(btns_for_task, users)
+    index = len(users) - 1
+    print(index + 1,index + 1 < len(btns_for_task))
+    if index + 1 <= len(btns_for_task):
+        print(btns_for_task[index] == users[index])
+        if btns_for_task[index] == users[index]:
+            hilight_btn(btns[users[index]] , 'green',1000)
+        else:
+            print("error")
+    if index + 1 == len(btns_for_task):
+        next_lvl()
+
+def next_lvl():
+    global levl_btn, user_cliced
+    user_cliced = []
+    print(user_cliced, ' клики пользавателя')
+    levl_btn += 1
+    play()
 
 def play():
     btn_play.hide()
+    global btns_for_task
+    btns_for_task = creat_list_btn(btns_for_task)
+
     def show_next_btn(index):
         if index < levl_btn:
-            num = randint(0,5)
+            num = btns_for_task[index]
             hilight_btn(btns[num],'red',1000)
-            btns_for_task.append(num)
+#            btns_for_task.append(num)
             print(btns_for_task)
             QTimer.singleShot(1200,lambda: show_next_btn(index+1))
     show_next_btn(0)
 
+def user_cliced_btn(click_btn):
+    num_btn = int(click_btn.text()) - 1
+    print(num_btn)
+    user_cliced.append(num_btn)
+    check(user_cliced)
 
+def creat_list_btn(has_btns):
+    new_btns = levl_btn - len(has_btns)
+    for i in range(new_btns):
+        num = randint(0,5)
+        has_btns.append(num)
+    return has_btns
+
+
+user_cliced = []
 levl_btn = 3
 
 btn1 = QPushButton()
 btn1.setText('1')
 btn1.setFont(QFont('Times',100))
 btn1.setStyleSheet('background-color:rgb(243, 244, 150);')
+btn1.clicked.connect(lambda: user_cliced_btn(btn1))
 
 btn2 = QPushButton()
 btn2.setText('2')
 btn2.setFont(QFont('Times',100))
 btn2.setStyleSheet('background-color:rgb(243, 244, 150);')
+btn2.clicked.connect(lambda: user_cliced_btn(btn2))
 
 btn3 = QPushButton()
 btn3.setText('3')
 btn3.setFont(QFont('Times',100))
 btn3.setStyleSheet('background-color:rgb(243, 244, 150);')
+btn3.clicked.connect(lambda: user_cliced_btn(btn3))
 
 btn4 = QPushButton()
 btn4.setText('4')
 btn4.setFont(QFont('Times',100))
 btn4.setStyleSheet('background-color:rgb(243, 244, 150);')
+btn4.clicked.connect(lambda: user_cliced_btn(btn4))
 
 btn5 = QPushButton()
 btn5.setText('5')
 btn5.setFont(QFont('Times',100))
 btn5.setStyleSheet('background-color:rgb(243, 244, 150);')
+btn5.clicked.connect(lambda: user_cliced_btn(btn5))
 
 btn6 = QPushButton()
 btn6.setText('6')
 btn6.setFont(QFont('Times',100))
 btn6.setStyleSheet('background-color:rgb(243, 244, 150);')
+btn6.clicked.connect(lambda: user_cliced_btn(btn6))
 
 btn_play = QPushButton('Играть!')
 btn_play.setFont(QFont('Times',150))
