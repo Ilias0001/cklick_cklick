@@ -1,5 +1,4 @@
 from random import randint
-from time import sleep
 from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtGui import QIcon, QFont
 from PyQt5.QtWidgets import(
@@ -25,17 +24,23 @@ def hilight_btn(btn,color,duration_ms = 500):
     QTimer.singleShot(duration_ms , lambda: btn.setStyleSheet(original_stule))
 
 def check(users):
+    global levl_btn
     print(btns_for_task, users)
     index = len(users) - 1
     print(index + 1,index + 1 < len(btns_for_task))
     if index + 1 <= len(btns_for_task):
         print(btns_for_task[index] == users[index])
         if btns_for_task[index] == users[index]:
-            hilight_btn(btns[users[index]] , 'green',1000)
+            hilight_btn(btns[users[index]] , 'green',500)
         else:
             print("error")
+            levl_btn = 3
+            hilight_btn(btns[users[index]] , 'yellow',500)
+            set_btn_enablet(False)
+            QTimer.singleShot(1200,lambda: [set_btn_enablet(True),play()])
+            return
     if index + 1 == len(btns_for_task):
-        next_lvl()
+        QTimer.singleShot(1200,lambda: next_lvl())
 
 def next_lvl():
     global levl_btn, user_cliced
@@ -52,7 +57,7 @@ def play():
     def show_next_btn(index):
         if index < levl_btn:
             num = btns_for_task[index]
-            hilight_btn(btns[num],'red',1000)
+            hilight_btn(btns[num],'red',500)
 #            btns_for_task.append(num)
             print(btns_for_task)
             QTimer.singleShot(1200,lambda: show_next_btn(index+1))
@@ -66,11 +71,20 @@ def user_cliced_btn(click_btn):
 
 def creat_list_btn(has_btns):
     new_btns = levl_btn - len(has_btns)
-    for i in range(new_btns):
-        num = randint(0,5)
-        has_btns.append(num)
+    if new_btns <= 0:
+        has_btns = []
+        for i in range(levl_btn):
+            num = randint(0,5)
+            has_btns.append(num)
+    else:
+        for i in range(new_btns):
+            num = randint(0,5)
+            has_btns.append(num)
     return has_btns
 
+def set_btn_enablet(enablet):
+    for btn in btns:
+        btn.setEnabled(enablet)
 
 user_cliced = []
 levl_btn = 3
