@@ -23,6 +23,16 @@ def hilight_btn(btn,color,duration_ms = 500):
     btn.setStyleSheet(f'background-color:{color};')
     QTimer.singleShot(duration_ms , lambda: btn.setStyleSheet(original_stule))
 
+def update_score(status):
+    global score,best_score
+    if status:
+        score += 1
+    else:
+        score = 0
+    text_score.setText('количество балов:' + str(score))
+    if score > best_score:
+        best_score_txt = score
+
 def check(users):
     global levl_btn
     print(btns_for_task, users)
@@ -32,15 +42,19 @@ def check(users):
         print(btns_for_task[index] == users[index])
         if btns_for_task[index] == users[index]:
             hilight_btn(btns[users[index]] , 'green',500)
+            if index + 1 == len(btns_for_task):
+                update_score(True)
         else:
             print("error")
             levl_btn = 3
             hilight_btn(btns[users[index]] , 'yellow',500)
             set_btn_enablet(False)
             QTimer.singleShot(1200,lambda: [set_btn_enablet(True),play()])
+            update_score(False)
             return
     if index + 1 == len(btns_for_task):
-        QTimer.singleShot(1200,lambda: next_lvl())
+        set_btn_enablet(False)
+        QTimer.singleShot(1200,lambda: [set_btn_enablet(True),next_lvl()])
 
 def next_lvl():
     global levl_btn, user_cliced
@@ -50,6 +64,7 @@ def next_lvl():
     play()
 
 def play():
+    set_btn_enablet(True)
     btn_play.hide()
     global btns_for_task
     btns_for_task = creat_list_btn(btns_for_task)
@@ -133,24 +148,25 @@ line_btn_play =  QHBoxLayout()
 line_btn_play.addWidget(btn_play)
 
 btns = [btn1,btn2,btn3,btn4,btn5,btn6]
+set_btn_enablet(False)
 btns_for_task = []
 
 
-num1 = 0
-text1 = QLabel('количество балов: ' + str(num1),alignment=Qt.AlignCenter)#(q,alignment=Qt.AlignCenter)
-text1.setFont(QFont('Times',50))
+score = 0
+text_score = QLabel('количество балов: ' + str(score),alignment=Qt.AlignCenter)#(q,alignment=Qt.AlignCenter)
+text_score.setFont(QFont('Times',50))
 
 with open('text.txt','r') as text:
     best_score = text.read()
 
-best_score = QLabel('рекорд:' + str(best_score),alignment=Qt.AlignCenter)#(q,alignment=Qt.AlignCenter)
-best_score.setFont(QFont('Times',50))
+best_score_txt = QLabel('рекорд:' + str(best_score),alignment=Qt.AlignCenter)#(q,alignment=Qt.AlignCenter)
+best_score_txt.setFont(QFont('Times',50))
 
 line_best_score = QHBoxLayout()
 line_best_score.addWidget(best_score)
 
 line_text1 = QHBoxLayout()
-line_text1.addWidget(text1)
+line_text1.addWidget(text_score)
 
 line_123_h = QHBoxLayout()#сдесь 1я 2я 3я кнопка
 line_123_h.addWidget(btn1)
