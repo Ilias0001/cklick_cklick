@@ -31,17 +31,20 @@ def update_score(status):
         score = 0
     text_score.setText('количество балов:' + str(score))
     if score > best_score:
-        best_score_txt = score
+        best_score = score
+        best_score_txt.setText('рекорд:' + str(best_score))
 
 def check(users):
     global levl_btn
     print(btns_for_task, users)
     index = len(users) - 1
     print(index + 1,index + 1 < len(btns_for_task))
+    set_btn_enablet(False)
     if index + 1 <= len(btns_for_task):
         print(btns_for_task[index] == users[index])
         if btns_for_task[index] == users[index]:
             hilight_btn(btns[users[index]] , 'green',500)
+            QTimer.singleShot(1200,lambda: set_btn_enablet(True))
             if index + 1 == len(btns_for_task):
                 update_score(True)
         else:
@@ -54,7 +57,7 @@ def check(users):
             return
     if index + 1 == len(btns_for_task):
         set_btn_enablet(False)
-        QTimer.singleShot(1200,lambda: [set_btn_enablet(True),next_lvl()])
+        QTimer.singleShot(1200,lambda:next_lvl())
 
 def next_lvl():
     global levl_btn, user_cliced
@@ -64,7 +67,8 @@ def next_lvl():
     play()
 
 def play():
-    set_btn_enablet(True)
+    print('работает def play()')
+    set_btn_enablet(False)
     btn_play.hide()
     global btns_for_task
     btns_for_task = creat_list_btn(btns_for_task)
@@ -76,6 +80,8 @@ def play():
 #            btns_for_task.append(num)
             print(btns_for_task)
             QTimer.singleShot(1200,lambda: show_next_btn(index+1))
+        else:
+            set_btn_enablet(True)
     show_next_btn(0)
 
 def user_cliced_btn(click_btn):
@@ -157,13 +163,13 @@ text_score = QLabel('количество балов: ' + str(score),alignment=Q
 text_score.setFont(QFont('Times',50))
 
 with open('text.txt','r') as text:
-    best_score = text.read()
+    best_score = int(text.read())
 
 best_score_txt = QLabel('рекорд:' + str(best_score),alignment=Qt.AlignCenter)#(q,alignment=Qt.AlignCenter)
 best_score_txt.setFont(QFont('Times',50))
 
 line_best_score = QHBoxLayout()
-line_best_score.addWidget(best_score)
+line_best_score.addWidget(best_score_txt)
 
 line_text1 = QHBoxLayout()
 line_text1.addWidget(text_score)
